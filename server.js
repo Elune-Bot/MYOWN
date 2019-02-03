@@ -1,11 +1,30 @@
 const Discord = require('discord.js');
 const Unique = new Discord.Client();
 const fs = require("fs");
-const prefix = "/";
+const prefix = process.env.PREFIX;
 const ms = new require('ms');
 const bot = new Discord.Client({disableEveryone: true});
 const SuperAgent = new require('superagent');
+const antispam = require("discord-anti-spam");
+const string = new require('string');
 Unique.commands = new Discord.Collection();
+const http = require('http');//install this
+const express = require('express');//install this
+const app = express();
+let coins = require("./coins.json");
+let xp = require("./xp.json");
+let cooldown = new Set();
+let cdseconds = 5;
+let cdsecond = 2;
+app.get("/", (request, response) => {
+response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+setInterval(() => {
+http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+    let cooldown5 = 8.64e+7,
+    amount = 250
 
 
 
@@ -13,6 +32,16 @@ Unique.on("ready", async () => {
       console.log(`${Unique.user.username} is online on ${Unique.guilds.size} servers!`);
 });
 
+antispam(Unique, {
+    warnBuffer: 3, //Maximum amount of messages allowed to send in the interval time before getting warned.
+    maxBuffer: 5, // Maximum amount of messages allowed to send in the interval time before getting banned.
+    interval: 1000, // Amount of time in ms users can send a maximum of the maxBuffer variable before getting banned.
+    warningMessage: "Hello, don't spam. PuRe bot has anti spam features. You'll be banned if you continue.", // Warning message send to the user indicating they are going to fast.
+    banMessage: " was banned for spamming. Don't test PuRe bots anti spam. Would anyone else like a try?", // Ban message, always tags the banned user in front of it.
+    maxDuplicatesWarning: 7, // Maximum amount of duplicate messages a user can send in a timespan before getting warned
+    maxDuplicatesBan: 10, // Maximum amount of duplicate messages a user can send in a timespan before getting banned
+    deleteMessagesAfterBanForPastDays: 7 // Delete the spammed messages after banning for the past x days.
+});
 
  fs.readdir("./commands", (err, file) => {
 
@@ -37,42 +66,82 @@ Unique.on("ready", async () => {
 bot.afk = new Map();
 Unique.on("message", async message => {
   if(message.author.bot) return;
+    if(message.channel.type === "dm") {
+    if(message.author.id === "314640655282339841") return;
+    let embed = new Discord.RichEmbed()
+    .setTimestamp()
+    .setTitle("Direct Message To The Bot")
+    .addField(`Sent By:`, message.author.id)
+    .setColor("RANDOM")
+    .setThumbnail(message.author.displayAvatarURL)
+    .addField(`Message: `,message.content)
+    .setFooter(`DM Bot Messages | DM Logs`)
+   
+    Unique.users.get("314640655282339841").send(embed)
+  };
   let messageArray = message.content.split(" ").slice(0);
 let cmd = messageArray[0];
 let args = messageArray.slice(1);
-if(message.channel.type === "dm") message.reply("NO NO");
-
-  
-  
-  
-  
-//   if (message.content.startsWith(prefix)) return message.channel.send(":x: Please use commands in real server! :x:") //if the message is a command
-//   if (!message.content.startsWith(prefix)) message.channel.send("This message has been send to the staff! :incoming_envelope:");
-//   if (args.length > 256) return message.reply("Your message content too many characters :/") //if the message contnt more than 256 character, what fields do not allow
-
-//   var embed = new Discord.RichEmbed()
-//       .setColor('RANDOM')
-//       .setTitle("New request in DM!")
-//       .addField(args, "Send by: " + message.author.username + " with the ID: " + message.author.id)
-//   Unique.guilds.get("511865295791718400");
-//   Unique.channels.get("540813043890913290").send(embed); //send the embed in a specific channel
-// }
 
 
-// if (message.content.startsWith(prefix + "reply")) {
-//     if (message.author.id !== "314640655282339841") return message.reply('You cannot use that!')
-//     var Rargs = message.content.split(" ").slice(2).join(" ")
-//     var userID = args[1]
-//     if (isNaN(userID)) return message.reply("This is not an ID!") //if args is Not A Number!
-//     var embed = new Discord.RichEmbed()
-//         .setColor('RANDOM')
-//         .setTitle("the staff answered you!")
-//         .setDescription(Rargs)
-//         .setFooter("this message was sent to you by: " + message.author.username + " !")
-//     Unique.users.get(userID).send(embed)
-//     message.channel.send("Send!").catch(console.error) //send the message
-//     //it may be that if the user has blocked your bot that it does not work
-// }
+  if(!coins[message.author.id]){
+  coins[message.author.id] = {
+    coins: 0
+  };
+}
+// if(message.content.startsWith("!")) return; {
+let coinAmt = Math.floor(Math.random() * 35) + 1;
+let baseAmt = Math.floor(Math.random() * 35) + 1;
+console.log(`${coinAmt} ; ${baseAmt}`);
+
+if(coinAmt === baseAmt) {
+  coins[message.author.id] = {
+    coins: coins[message.author.id].coins + 5
+  };
+  fs.writeFile("./coins.json", JSON.stringify(coins), (err) => {
+    if (err) console.log(err)
+  });
+  let coinEmbed = new Discord.RichEmbed()
+  .setAuthor(message.author.username)
+  .setColor("RANDOM")
+  .addField("💸COINS💸", `:five: coins added to your :moneybag: money!`);
+
+  message.channel.send(coinEmbed).then(msg => {msg.delete(50000)});
+  }
+  
+ 
+  let xpAdd = Math.floor(Math.random() * 7) + 8;
+console.log(xpAdd);
+
+if (!xp[message.author.id]) {
+    xp[message.author.id] = {
+        xp: 0,
+        level: 1
+    };
+}
+
+
+let curxp = xp[message.author.id].xp;
+let curlvl = xp[message.author.id].level;
+let nxtLvl = xp[message.author.id].level * 300;
+xp[message.author.id].xp = curxp + xpAdd;
+if (nxtLvl <= xp[message.author.id].xp) {
+    xp[message.author.id].level = curlvl + 1;
+    let lvlup = new Discord.RichEmbed()
+        .setTitle("Level Up!")
+        .addField("Congrats to", `${message.author}`)
+        .setColor("#08ff00")
+        .addField("New Level", curlvl + 1);
+
+    message.channel.send(lvlup).then(msg => {
+        msg.delete(5000)
+    });
+}
+fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
+            if (err) console.log(err)
+});
+  
+  
 
 
 
@@ -98,16 +167,16 @@ bot.afk.forEach(key => {
 
 
 
-
-
-let number = message.guild.memberCount - 1;
+if(!message.content.startsWith(prefix)) {
+let number = `${message.guild.memberCount}`;
 let result = number;
-let activities = [{text: `Prefix is ${prefix}`,type:"playing"},{text:`with you and ${result} members`,type:"watching"}]
+let activities = [{text: `Prefix is ${prefix}`,type:"playing"},{text:`${result} members including you`,type:"watching"}]
 setInterval(()=>{
     let random = Math.floor(Math.random()*activities.length)
-    Unique.user.setActivity(activities[random].text, {type: activities[random].type});
-},10000)
-
+    Unique.user.setActivity(activities[random].text, {type: activities[random].type})
+},10000);
+}
+  
 if (message.content.startsWith("/BOTONLINE")) {
 await Unique.user.setStatus('online');
 }
@@ -146,8 +215,8 @@ if (message.content.startsWith("/BOTDND")) {
      let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
      if(!kUser) message.channel.sendMessage("Can't find user!");
      let kReason = args.join(" ").slice(22);
-     if(!message.member.hasPermission("MANAGE_MESSAGES")) message.channel.sendMessage("No can do pal!");
-     if(kUser.hasPermission("MANAGE_MESSAGES")) message.channel.sendMessage("That person can't be kicked!");
+     if(!message.member.hasPermission("KICK_MEMBERS")) message.channel.sendMessage("No can do pal!");
+     if(kUser.hasPermission("ADMINISTRATOR")) message.channel.sendMessage("That person can't be kicked!");
 
      let kickEmbed = new Discord.RichEmbed()
      .setDescription("~Kick~")
@@ -166,19 +235,135 @@ if (message.content.startsWith("/BOTDND")) {
      punishedChannel.send(kickEmbed);
 
    }
-
-   if (message.content.includes("fuck", "suck", "cunt", "shit", "fuc*", "ass", "dick", "d1ck", "pussy")) {
+   let filterWords = [
+    "anal",
+    "anus",
+    "arse",
+    "nigger",
+    "nigga",
+    "ballsack",
+    "balls",
+    "bastard",
+    "bitch",
+    "biatch",
+    "blowjob",
+    "blow job",
+    "bollock",
+    "bollok",
+    "boner",
+    "boob",
+    "bugger",
+    "bum",
+    "buttplug",
+    "clitoris",
+    "cock",
+    "coon",
+    "cunt",
+    "dick",
+    "dildo",
+    "dyke",
+    "fag",
+    "feck",
+    "fellate",
+    "fellatio",
+    "felching",
+    "fucker",
+    "fucking",
+    "fuck",
+    "f u c k",
+    "fudgepacker",
+    "fudge packer",
+    "flang",
+    "homo",
+    "jizz",
+    "knobend",
+    "knob end",
+    "labia",
+    "muff",
+    "penis",
+    "prick",
+    "pube",
+    "pussy",
+    "queer",
+    "scrotum",
+    "sex",
+    "shit",
+    "s hit",
+    "sh1t",
+    "slut",
+    "smegma",
+    "fucken",
+    "spunk",
+    "tit",
+    "tosser",
+    "turd",
+    "twat",
+    "vagina",
+    "wank",
+    "whore",
+    "mofucker",
+    "niger"
+];
+   if (message.content.includes(filterWords)) {
        message.delete()
        message.author.send(`Hey ${message.author}! That word is been banned from the server, please don't use it again!`)
 
  }
 
 
+  if(message.content.toLowerCase().startsWith(prefix + "help")) {
+          message.delete();
+        let user = message.author;
+        user.sendMessage("**PREFIX = /** \n**Commands:** \n **1. 8ball - ** It is a command that will reply you random answers from a question. \n **2. Avatar -** It is a command that shows an users Avatar/Icon. \n **3. Botinfo** ");
+ 
+  }
+
+
+  const ownerID = '314640655282339841';
+
+if (message.content.startsWith(prefix + "servers")) {
+    if (message.author.id !== ownerID) return message.channel.send("You are not authorized to use this command.");
+    let string = '';
+
+    Unique.guilds.forEach(guild => {
+        string += '***Server Name:*** ' + guild.name + '\n' + '***Server ID:***` ' + guild.id + ' ` ' + '\n\n';
+
+    })
+
+    let botembed = new Discord.RichEmbed()
+        .setColor("#000FF")
+        .addField("Bot is On ", string)
+        .setTimestamp()
+        .setFooter("Command Ran By: " + message.author.username, message.author.avatarURL);
+    message.channel.send(botembed);
+}
+
+
+     if (message.content.startsWith(prefix + "removebot")) {
+         if (message.author.id !== ownerID) return message.channel.send("You are not authorized to use this command.");
+
+         let error17 = new Discord.RichEmbed().setColor("990033")
+             .setDescription('**Please enter a valid server ID.**')
+             .setColor(0xff0000)
+
+         let error18 = new Discord.RichEmbed().setColor("990033")
+             .setDescription('**You cannot kick the bot from this server!**')
+             .setColor(0xff0000)
+
+
+         if (isNaN(args[0])) return message.channel.send(error17).then(msg => {
+             msg.delete(9000)
+         });
+
+         //If tried kick bot from a main server (like for emote provider) will return error18
+         if (args[0] == 511865295791718400) return message.channel.send(error18).then(msg => {
+             msg.delete(9000)
+         });
+
+         Unique.guilds.get(args[0]).leave();
+         message.channel.send(`**Bot was been removed from server id [${args[0]}]**`)
+     }
   
-
-
-
-
     // if (message.content.startsWith(prefix + "warn" )) {
     //
     //   ///report @PhoneticMytic01 this is the reason
@@ -208,18 +393,7 @@ if (message.content.startsWith("/BOTDND")) {
 
 
 
-//       if (message.content.startsWith(prefix + "active")) {
-//   let rMember = message.author;
-//   let role = message.guild.roles.find(`name`, "Active");
 
-//   await
-//   message.member.addRole(role.id);
-//   try{
-//     await rMember.send(`Congrats, you have been given the role ${role.name}`)
-//   }catch(e){
-//     message.channel.send(`Congrats to <@${rMember.id}>, they have been given the role ${role.name}. We tried to DM them, but their DMs are locked.`)
-//   }
-// }
   
   
 
@@ -447,113 +621,9 @@ message.channel.sendMessage("I have unmuted the player");
   }
 }
 
-    if (message.content.startsWith(prefix + 'hug')) {
-    let hug = [
-        "https://data.whicdn.com/images/221692186/original.gif",
-        "http://mrwgifs.com/wp-content/uploads/2013/04/Ouran-High-School-Host-Club-Love-Hug-Gif.gif",
-        "http://images6.fanpop.com/image/photos/33100000/Kyoya-and-Tamaki-ouran-high-school-host-club-33132917-500-375.gif",
-        "http://31.media.tumblr.com/4d6525e7b5e546cde555bf2453563335/tumblr_mskyp8XJcb1r40gm7o1_1280.gif",
-        "https://i.pinimg.com/originals/34/dc/98/34dc98f17fd5cf558611f14ff9a0c1c9.gif",
-        "https://78.media.tumblr.com/6bef64140dfefe6fe86089c6eb11fb9b/tumblr_ohhnjyDJll1vm2xpgo1_500.gif",
-        "https://78.media.tumblr.com/806c23dbcf9bde033e708c8679c63975/tumblr_inline_ohhtig3BpF1rz9r19_540.gif",
-        "https://i.pinimg.com/originals/0f/48/1b/0f481bfc59229ce8127f2aba52bb8f4a.gif",
-        "https://pa1.narvii.com/6276/4461c2a865973bddcc5f4e591a165e09275c7a2c_hq.gif",
-        "https://78.media.tumblr.com/7e29c1e560c527de00a9f57bb7d941c3/tumblr_inline_ohi8745BbI1u9qbij_540.gif",
-        "https://data.whicdn.com/images/271163043/original.gif",
-        "https://78.media.tumblr.com/d00aba2e25ac11a11d9c5a770275dfc8/tumblr_orpdyc83FN1rtwid9o1_500.gif",
-        "http://0.media.dorkly.cvcdn.com/33/43/cac85de1cfd2bc4e7bec36631b260156.gif",
-        "https://i.pinimg.com/originals/22/8a/c9/228ac960b7c24ffb87374857fa6a0920.gif",
-        "https://pa1.narvii.com/6333/8c254b88d099c03be84769075ecac875c5dbb4bb_hq.gif",
-        "https://pa1.narvii.com/6449/c5383d0a548987d69aac06e8dc9b270219159b3f_hq.gif",
-        "https://media1.tenor.com/images/100c453c2f411189b40e6931ff65a88b/tenor.gif?itemid=7210521",
-        "https://i.pinimg.com/originals/e5/0e/c8/e50ec889ef64432e5d4648370014d272.gif",
-        "https://78.media.tumblr.com/94f62f2fbca608f70a48e6c04c2dc27c/tumblr_orotkrEC4t1vbbkedo2_540.gif",
-        "http://i0.kym-cdn.com/photos/images/original/001/266/481/075.gif",
-        "https://data.whicdn.com/images/310192271/original.gif",
-        "https://78.media.tumblr.com/064596e2fb0101675b89d79ac41141e0/tumblr_p8g2jmxCLD1qc9mvbo1_540.gif",
-    ]
-    let hugresult = Math.floor((Math.random() * hug.length));
-    if (!args[0]) {
-        const ghembed = new Discord.RichEmbed()
-            .setColor(0xFF0000)
-            .setTitle(`${message.author.username} hugged themself...! (weirdo)`)
-            .setImage('https://media3.giphy.com/media/ArLxZ4PebH2Ug/giphy.gif')
-        message.channel.send({
-            embed: ghembed
-        })
-        return;
-    }
-    if (!message.mentions.members.first().user.username === message.isMentioned(message.author)) {
-        const hembed = new Discord.RichEmbed()
-            .setColor(0xFF0000)
-            .setTitle(`${message.author.username} gave ${message.mentions.members.first().user.username} a hug! How sweet!`)
-            .setImage(hug[hugresult])
-        message.channel.send({
-            embed: hembed
-        })
-        return;
-    }
-    const ghembed = new Discord.RichEmbed()
-        .setColor(0xFF0000)
-        .setTitle(`${message.author.username} hugged themself...! (weirdo)`)
-        .setImage('https://media3.giphy.com/media/ArLxZ4PebH2Ug/giphy.gif')
-    message.channel.send({
-        embed: ghembed
-    })
-}
- if (message.content.startsWith(prefix + "quiz")) { 
-  const quiz = [
-  { q: "What color is the sky?", a: ["no color", "invisible"] },
-  { q: "Name a soft drink brand.", a: ["pepsi", "coke", "rc", "7up", "sprite", "mountain dew"] },
-  { q: "Name a programming language.", a: ["actionscript", "coffeescript", "c", "c++", "basic", "python", "perl", "javascript", "dotnet", "lua", "crystal", "go", "d", "php", "ruby", "rust", "dart", "java", "javascript"] },
-  { q: "Who's a good boy?", a: ["you are", "whirl"] },
-  { q: "Who created me?", a: ["Tea Cup", "Tea Cup#3343"] },
-  { q: "What programming language am I made in?", a: ["javascript",] },
-  { q: "Name the seventh planet from the Sun.", a: ["uranus"] },
-  { q: "Name the World's biggest island.", a: ["greenland",] },
-  { q: "What's the World's longest river?", a: ["amazon", "amazon river"] },
-  { q: "Name the World's largest ocean.", a: ["pacific", "pacific ocean"] },
-  { q: "Name one of the three primary colors.", a: ["blue", "red", "yellow"] },
-  { q: "How many colors are there in a rainbow?", a: ["7", "seven"] },
-  { q: "What do you call a time span of one thousand years?", a: ["millennium"] },
-  { q: "How many squares are there on a chess board?", a: ["64", "sixty four"] },
-  { q: "How many degrees are found in a circle?", a: ["360", "360 degrees", "three hundred sixty"] },
-  { q: "The Dewey Decimal system is used to categorize what?", a: ["books"] },
-  { q: "How many points does a compass have?", a: ["32", "thirty two"] },
-  { q: "How many strings does a cello have?", a: ["4", "four"] },
-  { q: "How many symphonies did Beethoven compose?", a: ["9", "nine"] },
-  { q: "How many lines should a limerick have?", a: ["5", "five"] },
-  { q: "What is the most basic language Microsoft made?", a: ["visual basic"] },
-  { q: "What is the most complicated language?", a: ["binary"] },
-  { q: "'OS' computer abbreviation usually means?", a: ["operating system"] }
-];
-const options = {
-  max: 1,
-  time: 30050,
-  errors: ["time"],
-};
-
   
-  const item = quiz[Math.floor(Math.random() * quiz.length)];
-  await message.channel.send(item.q);
-  try {
-    const collected = await message.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), options);
-    const winnerMessage = collected.first();
-    return message.channel.send({embed: new Discord.RichEmbed()
-                                 .setAuthor(`Winner: ${winnerMessage.author.tag}`, winnerMessage.author.displayAvatarURL)
-                                 .setTitle(`Correct Answer: \`${winnerMessage.content}\``)
-                                 .setFooter(`Question: ${item.q}`)
-                                 .setColor(message.guild.me.displayHexColor)
-                                })
-  } catch (_) {
-    return message.channel.send({embed: new Discord.RichEmbed()
-                                 .setAuthor('No one got the answer in time!')
-                                 .setTitle(`Correct Answer(s): \`${item.a}\``)
-                                 .setFooter(`Question: ${item.q}`)
-                                })
-  }
-}
- 
+
+
   
              
 });
