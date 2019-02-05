@@ -3,7 +3,6 @@ const Unique = new Discord.Client();
 const fs = require("fs");
 const prefix = process.env.PREFIX;
 const ms = new require('ms');
-const bot = new Discord.Client({disableEveryone: true});
 const SuperAgent = new require('superagent');
 const antispam = require("discord-anti-spam");
 const string = new require('string');
@@ -36,8 +35,8 @@ antispam(Unique, {
     warnBuffer: 3, //Maximum amount of messages allowed to send in the interval time before getting warned.
     maxBuffer: 5, // Maximum amount of messages allowed to send in the interval time before getting banned.
     interval: 1000, // Amount of time in ms users can send a maximum of the maxBuffer variable before getting banned.
-    warningMessage: "Hello, don't spam. PuRe bot has anti spam features. You'll be banned if you continue.", // Warning message send to the user indicating they are going to fast.
-    banMessage: " was banned for spamming. Don't test PuRe bots anti spam. Would anyone else like a try?", // Ban message, always tags the banned user in front of it.
+    warningMessage: "Hello, don't spam. Unique Bot has anti spam features. You'll be banned if you continue.", // Warning message send to the user indicating they are going to fast.
+    banMessage: " was banned for spamming. Don't test Unique Bot anti spam. Would anyone else like a try?", // Ban message, always tags the banned user in front of it.
     maxDuplicatesWarning: 7, // Maximum amount of duplicate messages a user can send in a timespan before getting warned
     maxDuplicatesBan: 10, // Maximum amount of duplicate messages a user can send in a timespan before getting banned
     deleteMessagesAfterBanForPastDays: 7 // Delete the spammed messages after banning for the past x days.
@@ -63,7 +62,7 @@ antispam(Unique, {
   
 
   //GuideLines.user.setGame("on Atom");
-bot.afk = new Map();
+Unique.afk = new Map();
 Unique.on("message", async message => {
   if(message.author.bot) return;
     if(message.channel.type === "dm") {
@@ -148,7 +147,7 @@ fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
 
 
   if (message.content.includes(message.mentions.users.first())) {
-  bot.afk.forEach(key => {
+  Unique.afk.forEach(key => {
     if (key.id == message.mentions.users.first().id) {
     message.guild.fetchMember(key.id).then(member => {
       let user_tag = member.user.tag;
@@ -158,9 +157,9 @@ fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
   });
 }
 
-bot.afk.forEach(key => {
+Unique.afk.forEach(key => {
   if (message.author.id == key.id) {
-    bot.afk.delete(message.author.id)
+    Unique.afk.delete(message.author.id)
     return message.reply(`is no longer AFK.`).then(msg => msg.delete(5000));
   }
 });
@@ -168,9 +167,7 @@ bot.afk.forEach(key => {
 
 
 if(!message.content.startsWith(prefix)) {
-let number = `${message.guild.memberCount}`;
-let result = number;
-let activities = [{text: `Prefix is ${prefix}`,type:"playing"},{text:`${result} members including you`,type:"watching"}]
+let activities = [{text: `Prefix is ${prefix}`,type:"playing"},{text:`${message.guild.memberCount} members including you`,type:"watching"}]
 setInterval(()=>{
     let random = Math.floor(Math.random()*activities.length)
     Unique.user.setActivity(activities[random].text, {type: activities[random].type})
@@ -207,7 +204,7 @@ if (message.content.startsWith("/BOTDND")) {
  
 
     let commandfile = Unique.commands.get(cmd.slice(prefix.length));
-    if (commandfile) commandfile.run(bot,message,args);
+    if (commandfile) commandfile.run(Unique,message,args);
     if (message.content.startsWith(prefix + "kick")) {
 
      //!kick @daeshan askin for it
@@ -520,8 +517,8 @@ message.channel.sendMessage("I have unmuted the player");
       let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     if(!bUser) message.channel.sendMessage("Can't find user!");
     let bReason = args.join(" ").slice(22);
-    if(!message.member.hasPermission("ADMINISTRATOR")) message.channel.sendMessage("No can do pal!");
-    if(bUser.hasPermission("ADMINISTRATOR")) message.channel.sendMessage("That person can't be kicked!");
+    if(!message.member.hasPermission("BAN_MEMBERS")) message.channel.sendMessage("No can do pal!");
+    if(message.member.hasPermission("BAN_MEMBERS")) message.channel.sendMessage("That person can't be kicked!");
 
     let banEmbed = new Discord.RichEmbed()
     .setDescription("~Ban~")
