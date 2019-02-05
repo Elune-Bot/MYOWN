@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (Unique, message, args) => {
 
       let user = message.mentions.users.first() || message.author;
 
@@ -16,5 +16,5 @@ let embed = new Discord.RichEmbed()
 
 
 module.exports.help = {
-    name: "avatar"
+    name: "Avatar"
   };
