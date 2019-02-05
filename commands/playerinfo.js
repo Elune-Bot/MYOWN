@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
         let user = message.mentions.users.first() || message.author;
         let playerembed = new Discord.RichEmbed()
         .setDescription("Your Information")
@@ -16,5 +16,5 @@ module.exports.run = async (bot, message, args) => {
 
 
 module.exports.help = {
-    name: "playerinfo"
+    name: "Playerinfo"
   };

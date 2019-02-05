@@ -16,5 +16,5 @@ exports.run = async (anko, message, args, color) => {
 }
 
 exports.help = {
-  name: 'invite',
+  name: 'Invite',
 }

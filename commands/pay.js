@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const fs = require("fs");
 let coins = require("../coins.json");
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
     if(!coins[message.author.id]){
         return message.reply("You don't have any coins!")
@@ -36,5 +36,5 @@ module.exports.run = async (bot, message, args) => {
     });
 }
 module.exports.help = {
-    name: "pay"
+    name: "Pay"
   };

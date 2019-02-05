@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
     message.delete();
     message.channel.send(`**BISSSSHES ${message.author} IS SMOKING**`).then(async msg => {
@@ -53,5 +53,5 @@ module.exports.run = async (bot, message, args) => {
 
 
 module.exports.help = {
-    name: "smoke"
+    name: "Smoke"
   };

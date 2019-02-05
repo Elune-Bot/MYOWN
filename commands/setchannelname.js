@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const ms = require("ms");
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 if(!message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.sendMessage("No you can not do that pal");
 let topic = args.join(' ');
 if(message.content.includes("@")) return message.reply("**NO NO NO, You can't do that PAL**");
@@ -14,5 +14,5 @@ message.channel.sendMessage("***DONE***").then(msg => msg.delete(5000)).then(msg
 }
 
 module.exports.help = {
-  name: "setchannelname"
+  name: "Setchannelname"
 };

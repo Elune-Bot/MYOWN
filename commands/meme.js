@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const superagent = require("superagent");
 
-const run = module.exports.run = async (client, message, args) => {
+const run = module.exports.run = async (CLOXY, message, args) => {
   let{body} = await superagent
   .get(`https://api-to.get-a.life/meme`);
 
@@ -16,5 +16,5 @@ const run = module.exports.run = async (client, message, args) => {
 
 
 module.exports.help = {
-    name: "meme"
+    name: "Meme"
   };

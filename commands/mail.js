@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
 let mUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     let fEmbed = new Discord.RichEmbed()
@@ -9,9 +9,10 @@ let mUser = message.guild.member(message.mentions.users.first() || message.guild
     .setColor("#1C384D")
     .addField("FORMAT", "Example: /mail @player [Message]");
 
-    if(!mUser) message.channel.sendMessage(fEmbed);
+    if(!mUser) return message.channel.sendMessage(fEmbed);
 
     let aMessage = args.join(" ").slice(22);
+  if(!aMessage) return message.reply("You must say something.");
 
     let mailEmbed = new Discord.RichEmbed()
     .setTitle("💰 Mail 💰")
@@ -28,5 +29,5 @@ let mUser = message.guild.member(message.mentions.users.first() || message.guild
 
 
 module.exports.help = {
-    name: "mail"
+    name: "Mail"
   };

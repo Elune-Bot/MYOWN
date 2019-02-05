@@ -1,12 +1,12 @@
 const Discord = require('discord.js');
-const Unique = new Discord.Client();
+const CLOXY = new Discord.Client();
 const fs = require("fs");
 const prefix = process.env.PREFIX;
 const ms = new require('ms');
 const SuperAgent = new require('superagent');
 const antispam = require("discord-anti-spam");
 const string = new require('string');
-Unique.commands = new Discord.Collection();
+CLOXY.commands = new Discord.Collection();
 const http = require('http');//install this
 const express = require('express');//install this
 const app = express();
@@ -27,20 +27,20 @@ http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 
 
 
-Unique.on("ready", async () => {
-      console.log(`${Unique.user.username} is online on ${Unique.guilds.size} servers!`);
+CLOXY.on("ready", async () => {
+      console.log(`${CLOXY.user.username} is online on ${CLOXY.guilds.size} servers!`);
 });
-
-antispam(Unique, {
+    antispam(CLOXY, {
     warnBuffer: 3, //Maximum amount of messages allowed to send in the interval time before getting warned.
     maxBuffer: 5, // Maximum amount of messages allowed to send in the interval time before getting banned.
     interval: 1000, // Amount of time in ms users can send a maximum of the maxBuffer variable before getting banned.
-    warningMessage: "Hello, don't spam. Unique Bot has anti spam features. You'll be banned if you continue.", // Warning message send to the user indicating they are going to fast.
-    banMessage: " was banned for spamming. Don't test Unique Bot anti spam. Would anyone else like a try?", // Ban message, always tags the banned user in front of it.
+    warningMessage: "Hello, don't spam. CLOXY Bot has anti spam features. You'll be banned if you continue.", // Warning message send to the user indicating they are going to fast.
+    banMessage: " was banned for spamming. Don't test CLOXY Bot anti spam. Would anyone else like a try?", // Ban message, always tags the banned user in front of it.
     maxDuplicatesWarning: 7, // Maximum amount of duplicate messages a user can send in a timespan before getting warned
     maxDuplicatesBan: 10, // Maximum amount of duplicate messages a user can send in a timespan before getting banned
     deleteMessagesAfterBanForPastDays: 7 // Delete the spammed messages after banning for the past x days.
 });
+
 
  fs.readdir("./commands", (err, file) => {
 
@@ -55,29 +55,17 @@ antispam(Unique, {
   jsfile.forEach((f, i) =>{
       let props = require(`./commands/${f}`);
       console.log(`${f} loaded!`);
-    Unique.commands.set(props.help.name, props);
+    CLOXY.commands.set(props.help.name, props);
   });
 
 });
   
 
   //GuideLines.user.setGame("on Atom");
-Unique.afk = new Map();
-Unique.on("message", async message => {
+CLOXY.afk = new Map();
+CLOXY.on("message", async message => {
   if(message.author.bot) return;
-    if(message.channel.type === "dm") {
-    if(message.author.id === "314640655282339841") return;
-    let embed = new Discord.RichEmbed()
-    .setTimestamp()
-    .setTitle("Direct Message To The Bot")
-    .addField(`Sent By:`, message.author.id)
-    .setColor("RANDOM")
-    .setThumbnail(message.author.displayAvatarURL)
-    .addField(`Message: `,message.content)
-    .setFooter(`DM Bot Messages | DM Logs`)
-   
-    Unique.users.get("314640655282339841").send(embed)
-  };
+    if(message.channel.type === "dm") return;
   let messageArray = message.content.split(" ").slice(0);
 let cmd = messageArray[0];
 let args = messageArray.slice(1);
@@ -147,7 +135,7 @@ fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
 
 
   if (message.content.includes(message.mentions.users.first())) {
-  Unique.afk.forEach(key => {
+  CLOXY.afk.forEach(key => {
     if (key.id == message.mentions.users.first().id) {
     message.guild.fetchMember(key.id).then(member => {
       let user_tag = member.user.tag;
@@ -157,9 +145,9 @@ fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
   });
 }
 
-Unique.afk.forEach(key => {
+CLOXY.afk.forEach(key => {
   if (message.author.id == key.id) {
-    Unique.afk.delete(message.author.id)
+    CLOXY.afk.delete(message.author.id)
     return message.reply(`is no longer AFK.`).then(msg => msg.delete(5000));
   }
 });
@@ -170,27 +158,27 @@ if(!message.content.startsWith(prefix)) {
 let activities = [{text: `Prefix is ${prefix}`,type:"playing"},{text:`${message.guild.memberCount} members including you`,type:"watching"}]
 setInterval(()=>{
     let random = Math.floor(Math.random()*activities.length)
-    Unique.user.setActivity(activities[random].text, {type: activities[random].type})
+    CLOXY.user.setActivity(activities[random].text, {type: activities[random].type})
 },10000);
 }
   
 if (message.content.startsWith("/BOTONLINE")) {
-await Unique.user.setStatus('online');
+await CLOXY.user.setStatus('online');
 }
 
 if (message.content.startsWith("/BOTDND")) {
-  await Unique.user.setStatus('dnd');
+  await CLOXY.user.setStatus('dnd');
   }
   
   if (message.content.startsWith("/BOTIDLE")) {
-  await Unique.user.setStatus('idle');
+  await CLOXY.user.setStatus('idle');
   }
   
     if (message.content.startsWith("/BOTINVISIBLE")) {
-  await Unique.user.setStatus('offline');
+  await CLOXY.user.setStatus('offline');
   }
 
-       let Tbot = Unique.user;
+       let Tbot = CLOXY.user;
       if(message.content.startsWith(`${Tbot}`)) {
         let replies = ["No!", "Yes!", "I don't know"];
 
@@ -200,20 +188,22 @@ if (message.content.startsWith("/BOTDND")) {
       }
 
 
+ 
 
  
 
-    let commandfile = Unique.commands.get(cmd.slice(prefix.length));
-    if (commandfile) commandfile.run(Unique,message,args);
-    if (message.content.startsWith(prefix + "kick")) {
 
-     //!kick @daeshan askin for it
+  let commandfile = CLOXY.commands.get(cmd.slice(prefix.length));
+    if (commandfile) commandfile.run(CLOXY,message,args);
+    if (message.content.startsWith(prefix + "kick")) {
+      
+
 
      let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
      if(!kUser) message.channel.sendMessage("Can't find user!");
      let kReason = args.join(" ").slice(22);
      if(!message.member.hasPermission("KICK_MEMBERS")) message.channel.sendMessage("No can do pal!");
-     if(kUser.hasPermission("ADMINISTRATOR")) message.channel.sendMessage("That person can't be kicked!");
+     if(kUser.hasPermission("KICK_MEMBERS")) message.channel.sendMessage("That person can't be kicked!");
 
      let kickEmbed = new Discord.RichEmbed()
      .setDescription("~Kick~")
@@ -224,12 +214,8 @@ if (message.content.startsWith("/BOTDND")) {
      .addField("Time", message.createdAt)
      .addField("Reason", kReason);
 
-     let punishedChannel = message.guild.channels.find(`name`, "punished");
-     if(!punishedChannel) message.channel.sendMessage("Can't find punished channel.");
-
-    
      message.guild.member(kUser).kick(kReason);
-     punishedChannel.send(kickEmbed);
+     message.channel.send(kickEmbed).then(msg => {msg.delete(5000)});
 
    }
    let filterWords = [
@@ -308,11 +294,14 @@ if (message.content.startsWith("/BOTDND")) {
  }
 
 
-  if(message.content.toLowerCase().startsWith(prefix + "help")) {
+  if(message.content.toLowerCase().startsWith(prefix + "stuffs")) {
           message.delete();
         let user = message.author;
-        user.sendMessage("**PREFIX = /** \n**Commands:** \n **1. 8ball - ** It is a command that will reply you random answers from a question. \n **2. Avatar -** It is a command that shows an users Avatar/Icon. \n **3. Botinfo** ");
- 
+        user.send("**PREFIX = /** \n **✅Default Commands✅** \n **1. 8ball - ** It is a command that will reply you random answers from a question. \n **2. Avatar -** It is a command that shows an users Avatar/Icon. \n **3. Botinfo -** It will show the status and informations of the bot \n **4. AFK -** This command will set your status to afk. \n **5. Coins -** This command will show how much coins you or the one that you mentioned gained already. \n **6. Invite -** This will automatically send you a permanent link of this server. \n **7. Mail -** This command will DM the user that is tagged/mentioned and the message the one you sent.")
+        user.send("** 8. Meme -** This command will post/send random funny or awkward memes. \n **9. Online - ** This command will show how many players are online, idle, do not disturb or invisible. \n **10. Pay -** This command will allow you to pay someone of your coins. \n **11. Ping -** This command will show the ping of the Bot, If it is lagging or not. \n **12. ServerInfo -** This command will show the information of this server. \n **13. Smoke -** This command will tell everyone that you are smoking \n **14. XP -** This command will show you what is your current level and how much more xp is needed to level up.") 
+        user.send("**✅MOD COMMANDS✅**\n **1. Lockdown -** This command will lockdown the channel where this message is sent for sometime. \n **2. Purge -** This will delete/bulk the past messages that is not older than 2 Weeks. \n **3. Setchannelname -** This will change the channels name on where this command is executed at. \n **4. Settopic -** This command will change the channels topic on where this command is executed at. \n **5. Warn -** This will warn the player that the staff mentions, when the player got warned for 3 times will get 30min Mute \n **6. Mute -** This command will mute the player that the staff mentioned for a certain time \n **7. Kick -** This command will kick the player that the staff has tagged/mentioned from the server \n **8. Ban -** This command will ban the player that the staff has mentioned/tagged from the server.")
+        user.send("***Make Sure That When The Command Is UpperCased Or LowerCased You Must Follow It So It Will Work***")
+        .catch(console.error);
   }
 
 
@@ -322,7 +311,7 @@ if (message.content.startsWith(prefix + "servers")) {
     if (message.author.id !== ownerID) return message.channel.send("You are not authorized to use this command.");
     let string = '';
 
-    Unique.guilds.forEach(guild => {
+    CLOXY.guilds.forEach(guild => {
         string += '***Server Name:*** ' + guild.name + '\n' + '***Server ID:***` ' + guild.id + ' ` ' + '\n\n';
 
     })
@@ -357,95 +346,16 @@ if (message.content.startsWith(prefix + "servers")) {
              msg.delete(9000)
          });
 
-         Unique.guilds.get(args[0]).leave();
+         CLOXY.guilds.get(args[0]).leave();
          message.channel.send(`**Bot was been removed from server id [${args[0]}]**`)
      }
   
-    // if (message.content.startsWith(prefix + "warn" )) {
-    //
-    //   ///report @PhoneticMytic01 this is the reason
-    //   let wUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    //   if (!wUser) message.channel.sendMessage("a"); return
-    //   let reason = args.join(" ").slice(22);
-    //
-    //
-    //   let warnEmbed = new Discord.RichEmbed()
-    //   .setDescription("Warn")
-    //   .setColor("#15f153")
-    //   .addField("Warned User", `${wUser} with ID: ${wUser.id}`)
-    //   .addField("Warned By", `${message.author} with ID: ${message.author.id}`)
-    //   .addField("Channel", message.channel)
-    //   .addField("Time", message.createdAt)
-    //   .addField("Reason", reason);
-    //
-    //   let warnschannel = message.guild.channels.find(`name`, "reports");
-    //   if (!warnschannel) message.channel.sendMessage("Couldn't Find The Channel")
-    //
-    //
-    //   message.delete().catch(O_o=>{});
-    //   warnschannel.send(warnEmbed)
-    //
-    // }
 
 
 
 
 
-  
-  
 
-
-if (message.channel.id === "508615555213819904") {
-  // if(message.member.hasPermission("ADMINISTRATOR")); return
-	if (!message.content.startsWith(prefix))
-  if (!message.content.startsWith(";"))
-  if (!message.content.startsWith("+"))
-  if (!message.content.startsWith("!"))
-  if (!message.content.startsWith("-"))  {
-		message.delete()
-	}
-}
-//   if(message.channel.id === "491600517819138069") {
-//   // if (message.member.hasPermission("ADMINISTRATOR")); return
-//   if (!message.content.startsWith("/active"))
-//     message.delete()
-//   }
-//   if (message.channel.id === "489360396633899009") {
-//   if(message.member.hasPermission("ADMINISTRATOR")); return
-// 	if (!message.content.startsWith("suggestion:")) {
-// 		message.delete()
-// 	}
-//  }
-//   if (message.channel.id === "487223698172936192") {
-//   if(message.member.hasPermission("ADMINISTRATOR")); return
-// 	if (message.content.startsWith("/"))  {
-// 		message.delete()
-// 	}
-// }
-//     if (message.channel.id === "487223698172936192") {
-//   // if(message.member.hasPermission("ADMINISTRATOR")); return
-// 	if (message.content.startsWith("*"))  {
-// 		message.delete()
-// 	}
-// }
-//     if (message.channel.id === "487223698172936192") {
-//   if(message.member.hasPermission("ADMINISTRATOR")); return
-// 	if (message.content.startsWith(","))  {
-// 		message.delete()
-// 	}
-// }
-//   if (message.channel.id === "487223698172936192") {
-//   if(message.member.hasPermission("ADMINISTRATOR")); return
-// 	if (message.content.startsWith("-"))  {
-// 		message.delete()
-// 	}
-// }
-//     if (message.channel.id === "491900345086115840") {
-//   //if(message.member.hasPermission("ADMINISTRATOR")); return
-// 	if (!message.content.startsWith(prefix))  {
-// 		message.delete()
-// 	}
-// }
 
 let Test = '3s';
 if(message.content.startsWith("hi")) {
@@ -456,11 +366,11 @@ if(message.content.startsWith("hi")) {
    message.channel.stopTyping(true);
               } 
   
-      if (message.content.startsWith(prefix + "mute")) {
-    if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("Sorry, but you do not have valid permissions! If you beleive this is a error, contact an owner.");
+      if (message.content.startsWith(prefix + "Mute")) {
+    if (!message.member.hasPermission("MUTE_MEMBERS")) return message.reply("Sorry, but you do not have valid permissions! If you beleive this is a error, contact an owner.");
     let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     if (!tomute) return message.reply("Couldn't find user.");
-    if (tomute.hasPermission("MANAGE_MESSAGES")) return message.reply("The user you are trying to mute is either the same, or higher role than you.");
+    if (tomute.hasPermission("MUTE_MEMBERS")) return message.reply("The user you are trying to mute is either the same, or higher role than you.");
     let muterole = message.guild.roles.find(`name`, "Muted");
 
     if (!muterole) {
@@ -492,7 +402,7 @@ message.channel.sendMessage("I have muted the player");
 
   
   
-      if (message.content.startsWith(prefix + "unmute")) {
+      if (message.content.toLowerCase().startsWith(prefix + "Unmute")) {
   if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.sendMessage("You Don't Have Permission To Execute This Command");
 
 
@@ -513,10 +423,10 @@ message.channel.sendMessage("I have unmuted the player");
 
 }
     
-    if (message.content.startsWith(prefix + "ban")) {
+    if (message.content.toLowerCase().startsWith(prefix + "ban")) {
       let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     if(!bUser) message.channel.sendMessage("Can't find user!");
-    let bReason = args.join(" ").slice(22);
+    let bReason = args.join(" ").slice(22) || "None"
     if(!message.member.hasPermission("BAN_MEMBERS")) message.channel.sendMessage("No can do pal!");
     if(message.member.hasPermission("BAN_MEMBERS")) message.channel.sendMessage("That person can't be kicked!");
 
@@ -535,7 +445,7 @@ message.channel.sendMessage("I have unmuted the player");
 
     return;
   }
-      if (message.content.startsWith(prefix + "addrole")) {
+      if (message.content.toLowerCase().startsWith(prefix + "addrole")) {
       if(!message.member.hasPermission("MANAGE_ROLES")) return message.reply("Sorry pal, you can't do that.");
   let rMember = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
   if(!rMember) return message.reply("Couldn't find that user, yo.");
@@ -553,7 +463,7 @@ message.channel.sendMessage("I have unmuted the player");
     message.channel.send(`Congrats to <@${rMember.id}>, they have been given the role ${gRole.name}. We tried to DM them, but their DMs are locked.`)
   }
 }
-    if (message.content.startsWith(prefix + "removerole")) {  
+    if (message.content.toLowerCase().startsWith(prefix + "removerole")) {  
     if(!message.member.hasPermission("MANAGE_ROLES")) return message.reply("Sorry pal, you can't do that.");
   let rMember = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
   if(!rMember) return message.reply("Couldn't find that user, yo.");
@@ -578,13 +488,13 @@ message.channel.sendMessage("I have unmuted the player");
 
 
   
-    if(message.content.startsWith(prefix + "warn")) {
+    if(message.content.toLowerCase().startsWith(prefix + "warn")) {
   let warns = JSON.parse(fs.readFileSync("warnings.json", "utf8"));
     if(!message.member.hasPermission("ADMINISTRATOR")) return message.channel.sendMessage("No you can not do that pal");
   let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0])
   if(!wUser) return message.channel.sendMessage("Must Mention A Player");
   if(wUser.hasPermission("MANAGE_MESSAGES")) return message.channel.sendMessage("You can not warn this player");
-  let reason = args.join(" ").slice(22);
+  let reason = args.join(" ").slice(22) || "None"
 
   if(!warns[wUser.id]) warns[wUser.id] = {
     warns: 0
@@ -605,12 +515,11 @@ message.channel.sendMessage("I have unmuted the player");
   .addField("Number of Warnings", warns[wUser.id].warns)
   .addField("Reason", reason);
 
-  let warnchannel = message.guild.channels.find(`name`, "logs");
-  if(!warnchannel) return message.reply("Couldn't Find Channel");
+message.channel.sendMessage(`${wUser} **has been warned** :x:`)
 
-  warnchannel.send(warnEmbed);
+  message.channel.send(warnEmbed);
 
-  if(warns[wUser.id].warns == 2){
+  if(warns[wUser.id].warns == 3){
     let muterole = message.guild.roles.find(`name`, "Muted");
     if(!muterole) return message.reply("You should create muted role")
 
@@ -625,4 +534,4 @@ message.channel.sendMessage("I have unmuted the player");
              
 });
 
-Unique.login(process.env.TOKEN);
+CLOXY.login(process.env.TOKEN);
