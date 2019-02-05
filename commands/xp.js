@@ -1,7 +1,7 @@
  const Discord = require("discord.js");
             let xp = require("../xp.json");
 
-            module.exports.run = async (client, message, args) => {
+            module.exports.run = async (CLOXY, message, args) => {
 
                 if (!xp[message.author.id]) {
                     xp[message.author.id] = {
@@ -27,5 +27,5 @@
 
             }
             module.exports.help = {
-    name: "xp"
+    name: "XP"
   };

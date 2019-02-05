@@ -1,10 +1,10 @@
 const Discord = require("discord.js");
 
 
-module.exports.run = async (Unique, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
  var embed = new Discord.RichEmbed()
-    .setDescription(`**${message.author.tag}** | :ping_pong: Ping : ${Unique.ping}ms`)
+    .setDescription(`**${message.author.tag}** | :ping_pong: Ping : ${CLOXY.ping}ms`)
     .setColor("RANDOM")
 message.channel.send(embed)
     .catch(console.error);    
@@ -12,5 +12,5 @@ message.channel.send(embed)
 }
 
 module.exports.help = {
-    name: "ping"
+    name: "Ping"
   };

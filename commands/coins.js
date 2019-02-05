@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 let coins = require("../coins.json");
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
   let you = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
   if(!you) return message.reply("**You must mention someone. \n FORMAT: /coins [User]**")
@@ -23,5 +23,5 @@ module.exports.run = async (bot, message, args) => {
 
 
 module.exports.help = {
-    name: "coins"
+    name: "Coins"
 }

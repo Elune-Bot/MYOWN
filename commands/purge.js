@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const Unique = new Discord.Client();
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
     if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send('Sorry, but you do not have the **Manage Messages** permissions! If you think this is an error, contact an owner.')
 
@@ -18,5 +18,5 @@ module.exports.run = async (client, message, args) => {
 }
 
 module.exports.help = {
-    name: "purge"
+    name: "Purge"
 };

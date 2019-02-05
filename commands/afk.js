@@ -1,12 +1,12 @@
 const Discord = require("discord.js");
 
 
-module.exports.run = async (Unique, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
 let reason = args.join(' ') ? args.join(' ') : 'I will be back soon!';
   //  if(reason) message.content.includes("@"); message.reply("No No No");
   if(reason.includes("@")) return message.channel.sendMessage("No you can not do that pal");
-  let afklist = Unique.afk.get(message.author.id);
+  let afklist = CLOXY.afk.get(message.author.id);
   message.delete();
   
   if (!afklist) {
@@ -15,10 +15,10 @@ let reason = args.join(' ') ? args.join(' ') : 'I will be back soon!';
       reason: reason
     };
  
-    Unique.afk.set(message.author.id, construct);
+    CLOXY.afk.set(message.author.id, construct);
     return message.reply(`is now AFK Reason: ${reason}`).then(msg => msg.delete(5000));
   } 
-    Unique.afk.delete(message.author.id);
+    CLOXY.afk.delete(message.author.id);
     return message.reply(`You are no longer afk`).then(msg => msg.delete(5000));
     
   
@@ -27,5 +27,5 @@ let reason = args.join(' ') ? args.join(' ') : 'I will be back soon!';
 
 
 module.exports.help = {
-    name: "afk"
+    name: "AFK"
   };

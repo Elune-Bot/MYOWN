@@ -1,17 +1,17 @@
 const Discord = require("discord.js");
 
-module.exports.run = async (Unique, message, args) => {
+module.exports.run = async (CLOXY, message, args) => {
 
 
 
 
-        let bicon = Unique.user.displayAvatarURL;
+        let bicon = CLOXY.user.displayAvatarURL;
         let botembed = new Discord.RichEmbed()
         .setDescription("Bot Information")
         .setColor("#15f153")
         .setThumbnail(bicon)
-        .addField("Bot Name", Unique.user.username)
-        .addField("Created On", Unique.user.createdAt);
+        .addField("Bot Name", CLOXY.user.username)
+        .addField("Created On", CLOXY.user.createdAt);
   
         message.channel.sendMessage(botembed);
     
@@ -21,5 +21,5 @@ module.exports.run = async (Unique, message, args) => {
 }
 
 module.exports.help = {
-  name: "botinfo"
+  name: "Botinfo"
 };
